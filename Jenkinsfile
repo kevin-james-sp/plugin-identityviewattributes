@@ -3,7 +3,6 @@ pipeline {
     tools {
         //jdk 'jdk11'
         jdk 'jdk-8u152'
-        ant
     }
 
     stages {
