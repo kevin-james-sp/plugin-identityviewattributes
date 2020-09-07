@@ -13,11 +13,17 @@ pipeline {
             }
         }
         stage('Build on Linux') {
-            when {
-                isUnix
-            }
             steps {
-                sh "'${antHome}/bin/ant' clean package"
+                script {
+                    // Run the build
+                    if (isUnix()) {
+                        echo "isUnix"
+                        sh "'${antHome}/bin/ant' clean package"
+                    } else {
+                        echo "not isUnix"
+                        bat(/"${antHome}\bin\ant" clean package/)
+                    }
+                }
             }
         }
         stage('Test') {
