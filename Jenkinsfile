@@ -1,7 +1,8 @@
 pipeline {
     agent any
     tools {
-        jdk 'jdk11'
+        #jdk 'jdk11'
+        jdk 'jdk-8u152'
     }
 
     stages {
@@ -12,11 +13,13 @@ pipeline {
         }
         stage('Build') {
             steps {
-                // Run the build
-                if (isUnix()) {
-                    sh "'${antHome}/bin/ant' clean package"
-                } else {
-                    bat(/"${antHome}\bin\ant" clean package/)
+                script {
+                    // Run the build
+                    if (isUnix()) {
+                        sh "'${antHome}/bin/ant' clean package"
+                    } else {
+                        bat(/"${antHome}\bin\ant" clean package/)
+                    }
                 }
             }
         }
