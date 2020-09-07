@@ -3,6 +3,7 @@ pipeline {
     tools {
         //jdk 'jdk11'
         jdk 'jdk-8u152'
+        ant
     }
 
     stages {
@@ -11,16 +12,12 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build') {
+        stage('Build on Linux') {
+            when {
+                isUnix
+            }
             steps {
-                script {
-                    // Run the build
-                    if (isUnix()) {
-                        sh "'${antHome}/bin/ant' clean package"
-                    } else {
-                        bat(/"${antHome}\bin\ant" clean package/)
-                    }
-                }
+                sh "'${antHome}/bin/ant' clean package"
             }
         }
         stage('Test') {
