@@ -17,6 +17,7 @@ pipeline {
                     // Run the build
                     if (isUnix()) {
                         echo "isUnix"
+                        sh "printenv"
                         sh "'${antHome}/bin/ant' clean package"
                     } else {
                         echo "not isUnix"
