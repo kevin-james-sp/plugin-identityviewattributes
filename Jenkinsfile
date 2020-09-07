@@ -1,11 +1,13 @@
 pipeline {
     agent any
+    tools {
+        jdk 'jdk11'
+    }
 
     stages {
         stage('Setup') {
             steps {
                 checkout scm
-                antHome = tool name: 'ant-1.9.7', type: 'ant'
             }
         }
         stage('Build') {
