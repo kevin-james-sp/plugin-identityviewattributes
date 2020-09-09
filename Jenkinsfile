@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     sh "mkdir ~/.m2"
-                    sh "echo '<settings><mirrors><mirror><id>other-mirror</id><url>https://repo.maven.apache.org/maven2</url><mirrorOf>central</mirrorOf></mirror></mirrors>' > ~/.m2/settings.xml"
+                    sh "echo '<settings><mirrors><mirror><id>other-mirror</id><url>https://repo.maven.apache.org/maven2</url><mirrorOf>central</mirrorOf></mirror></mirrors></settings>' > ~/.m2/settings.xml"
                     sh "mvn clean package"
                 }
             }
