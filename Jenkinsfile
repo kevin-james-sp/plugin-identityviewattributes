@@ -15,8 +15,9 @@ pipeline {
         stage('Build on Linux') {
             steps {
                 script {
-                    sh "echo $MAVEN_HOME"
                     sh "cat $MAVEN_HOME/conf/settings.xml"
+                    sh "echo --------------"
+                    sh "cat ~/.m2/settings.xml"
                     sh "mvn clean package"
                 }
             }
