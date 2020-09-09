@@ -1,0 +1,11 @@
+<settings>
+
+  <servers>
+	  <server>
+		<id>iiq-maven-repo</id>
+		<username>${iam-user-access-key-id}</username>
+		<password>${iam-user-secret-key}</password>
+	  </server>
+  </servers>
+
+</settings>

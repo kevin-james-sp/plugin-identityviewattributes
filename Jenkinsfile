@@ -2,6 +2,7 @@ pipeline {
     agent any
     tools {
         //jdk 'jdk11'
+        maven 'Maven 3.6.1'
         jdk 'jdk-8u152'
     }
 
@@ -14,15 +15,7 @@ pipeline {
         stage('Build on Linux') {
             steps {
                 script {
-                    // Run the build
-                    if (isUnix()) {
-                        echo "isUnix"
-                        sh "printenv"
-                        sh "'${antHome}/bin/ant' clean package"
-                    } else {
-                        echo "not isUnix"
-                        bat(/"${antHome}\bin\ant" clean package/)
-                    }
+                    sh "mvn clean package"
                 }
             }
         }
