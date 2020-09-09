@@ -15,9 +15,8 @@ pipeline {
         stage('Build on Linux') {
             steps {
                 script {
-                    sh "cat $MAVEN_HOME/conf/settings.xml"
-                    sh "echo --------------"
-                    sh "cat ~/.m2/settings.xml"
+                    sh "mkdir .m2"
+                    sh "echo '<settings><mirrors><mirror><id>other-mirror</id><url>https://repo.maven.apache.org/maven2</url><mirrorOf>central</mirrorOf></mirror></mirrors>' > ~/.m2/settings.xml"
                     sh "mvn clean package"
                 }
             }
