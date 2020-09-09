@@ -15,6 +15,9 @@ pipeline {
         stage('Build on Linux') {
             steps {
                 script {
+                    sh "echo $MAVEN_HOME"
+                    sh "echo $MVN_HOME"
+                    sh "echo $M2_HOME"
                     sh "mvn clean package"
                 }
             }
