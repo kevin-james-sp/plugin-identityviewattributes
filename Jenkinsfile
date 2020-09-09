@@ -16,8 +16,7 @@ pipeline {
             steps {
                 script {
                     sh "echo $MAVEN_HOME"
-                    sh "echo $MVN_HOME"
-                    sh "echo $M2_HOME"
+                    sh "cat $MAVEN_HOME/conf/settings.xml"
                     sh "mvn clean package"
                 }
             }
