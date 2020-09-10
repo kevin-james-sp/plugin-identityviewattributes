@@ -12,6 +12,8 @@
     <plugin.buildnumber>dev</plugin.buildnumber>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <iiq.version>8.1</iiq.version>
+    <sailpoint.dtd>target/sailpoint.dtd</sailpoint.dtd>
   </properties>
 
   <repositories>
@@ -34,38 +36,92 @@
 
   <dependencies>
     <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.1.1</version>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.glassfish.jersey.bundles</groupId>
-      <artifactId>jaxrs-ri</artifactId>
-      <version>2.22.2</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>sailpoint</groupId>
-      <artifactId>identityiq</artifactId>
-      <version>8.1</version>
-      <scope>provided</scope>
+      <artifactId>iiq-dependencies</artifactId>
+      <version>${iiq.version}</version>
+      <type>pom</type>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <!-- put the version into the manifest during package phase -->
+      <!-- read the build number -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <id>read-build-number</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>build.num</file>
+              </files>
+            </configuration>
+          </execution>          
+        </executions>
+      </plugin>
+      <!-- increment the number -->
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>update-build-number</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>project.properties['build.number']=(project.properties['build.number'].toInteger()+1).toString()</source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- write the incremented number back -->
+      <plugin>
+        <groupId>com.internetitem</groupId>
+        <artifactId>write-properties-file-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <executions>
+          <execution>
+            <id>write-buildnumber-to-file</id>
+            <phase>package</phase>
+            <goals>
+                <goal>write-properties-file</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>.</outputDirectory>
+              <filename>build.num</filename>
+              <properties>
+                <property>
+                  <name>build.number</name>
+                  <value>${build.number}</value>
+                </property>
+              </properties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Put the files in the right place inside the plugin ZIP -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptor>src/assembly/bin.xml</descriptor>
-          <finalName>${project.name}-${plugin.version}.${plugin.buildnumber}</finalName>
+          <finalName>${project.name}-${plugin.version}.${build.number}</finalName>
         </configuration>
         <executions>
           <execution>
@@ -75,6 +131,85 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <!-- Generate the DTD during the validate phase, ready for validating the XML files -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>java</executable>
+          <arguments>
+            <argument>-classpath</argument>
+            <classpath/>
+            <argument>sailpoint.launch.Launcher</argument>
+            <argument>sailpoint.tools.xml.DTDGenerator</argument>
+            <argument>${sailpoint.dtd}</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>validate-artifacts</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>validate</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>update-manifest-file</id>
+            <phase>package</phase>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <validationSets>
+            <validationSet>
+              <dir>resources</dir>
+              <includes>
+                <include>manifest.xml</include>
+                <includes>import/**</includes>
+              </includes>
+              <validating>true</validating>
+            </validationSet>
+          </validationSets>
+          <transformationSets>
+            <transformationSet>
+              <dir>resources</dir>
+              <includes>
+                <include>manifest.xml</include>
+              </includes>
+              <stylesheet>build-resources/insert-version.xslt</stylesheet>
+              <outputDir>target</outputDir>
+              <parameters>
+                <parameter>
+                  <name>version</name>
+                  <value>${plugin.version}</value>
+                </parameter>
+                <parameter>
+                  <name>build</name>
+                  <value>${build.number}</value>
+                </parameter>
+              </parameters>
+            </transformationSet>
+          </transformationSets>
+          <catalogs>
+            <catalog>./catalog.xml</catalog>
+          </catalogs>
+        </configuration>
       </plugin>
     </plugins>
     <extensions>
