@@ -26,7 +26,7 @@ pipeline {
             steps {
                 echo 'Testing..'
                 script {
-                    sh "aws cloudformation create-stack --region us-east-1 --stack-name jenkins-test-$BUILD_NUMBER --template-url s3://maven-iiq/iiq-cfn.yml"
+                    sh "aws cloudformation create-stack --region us-east-1 --stack-name jenkins-test-$BUILD_NUMBER --template-url https://maven-iiq.s3.amazonaws.com/iiq-cfn.yml"
                 }
             }
         }
