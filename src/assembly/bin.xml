@@ -2,11 +2,27 @@
     <formats>
        <format>zip</format>
     </formats>
-
+    <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
             <directory>resources</directory>
             <outputDirectory>/</outputDirectory>
+            <excludes>
+                <exclude>manifest.xml</exclude>
+                <exclude>sailpoint.dtd</exclude>
+            </excludes>
+            <filtered>false</filtered>
+        </fileSet>
+        <fileSet>
+            <directory>resources</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>manifest.xml</include>
+            </includes>
+            <excludes>
+                <exclude>sailpoint.dtd</exclude>
+            </excludes>
+            <filtered>true</filtered>
         </fileSet>
         <fileSet>
             <directory>target</directory>

@@ -3,12 +3,11 @@
   <groupId>sailpoint.plugins</groupId>
   <artifactId>identityviewattributes</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>identityviewattributes</name>
   <url>http://maven.apache.org</url>
 
   <properties>
-    <plugin.version>1.0</plugin.version>
     <plugin.buildnumber>dev</plugin.buildnumber>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -121,7 +120,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptor>src/assembly/bin.xml</descriptor>
-          <finalName>${project.name}-${plugin.version}.${build.number}</finalName>
+          <finalName>${project.name}-${project.version}.${build.number}</finalName>
         </configuration>
         <executions>
           <execution>
@@ -167,13 +166,6 @@
               <goal>validate</goal>
             </goals>
           </execution>
-          <execution>
-            <id>update-manifest-file</id>
-            <phase>package</phase>
-            <goals>
-              <goal>transform</goal>
-            </goals>
-          </execution>
         </executions>
         <configuration>
           <validationSets>
@@ -186,26 +178,6 @@
               <validating>true</validating>
             </validationSet>
           </validationSets>
-          <transformationSets>
-            <transformationSet>
-              <dir>resources</dir>
-              <includes>
-                <include>manifest.xml</include>
-              </includes>
-              <stylesheet>build-resources/insert-version.xslt</stylesheet>
-              <outputDir>target</outputDir>
-              <parameters>
-                <parameter>
-                  <name>version</name>
-                  <value>${plugin.version}</value>
-                </parameter>
-                <parameter>
-                  <name>build</name>
-                  <value>${build.number}</value>
-                </parameter>
-              </parameters>
-            </transformationSet>
-          </transformationSets>
           <catalogs>
             <catalog>./catalog.xml</catalog>
           </catalogs>
