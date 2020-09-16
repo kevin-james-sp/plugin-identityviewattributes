@@ -13,7 +13,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <iiq.version>8.1</iiq.version>
-    <sailpoint.dtd>target/sailpoint.dtd</sailpoint.dtd>
+    <sailpoint.dtd>resources/sailpoint.dtd</sailpoint.dtd>
   </properties>
 
   <repositories>
