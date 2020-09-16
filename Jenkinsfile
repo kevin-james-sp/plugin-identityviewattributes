@@ -28,7 +28,7 @@ pipeline {
                 script {
                     sh "aws cloudformation create-stack --stack-name jenkins-test-$BUILD_NUMBER --template-url https://maven-iiq.s3.amazonaws.com/iiq-cfn.yml"
                     sh "aws cloudformation wait stack-create-complete --stack-name jenkins-test-$BUILD_NUMBER"
-                    def props = readProperties file: '$WORKSPACE/build.num'
+                    def props = readProperties file: 'build.num'
                     env.mvnBuildNum = props.build.number
                     sh '''addr=`aws cloudformation describe-stacks --stack-name jenkins-test-$BUILD_NUMBER --output text --query Stacks[0].Outputs[0].OutputValue`
                         [`curl -o /dev/null -s -w "%{http_code}" -u spadmin:admin -F \'file=@$WORKSPACE/target/identityviewattributes-1.0.$mvnBuildNum.zip\' $addr/rest/plugins` -eq 200 ]
