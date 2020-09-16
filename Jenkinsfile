@@ -26,7 +26,7 @@ pipeline {
             steps {
                 echo 'Testing..'
                 script {
-                    sh aws cloudformation create-stack --stack-name jenkins-test --template-url s3://maven-iiq/iiq-cfn.yml
+                    sh aws cloudformation create-stack --stack-name "jenkins-test" --template-url "s3://maven-iiq/iiq-cfn.yml"
                 }
             }
         }
