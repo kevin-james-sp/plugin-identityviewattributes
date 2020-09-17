@@ -30,10 +30,10 @@ pipeline {
                     sh "aws cloudformation wait stack-create-complete --stack-name jenkins-test-$BUILD_NUMBER"
                     def props = readProperties file: 'build.num'
                     echo "setting env"
-                    env['mvnBuildNum'] = props['build.number']
+                    env.MVN_BUILD_NUM = props['build.number']
                     echo "env set"
                     sh '''addr=`aws cloudformation describe-stacks --stack-name jenkins-test-$BUILD_NUMBER --output text --query Stacks[0].Outputs[0].OutputValue`
-                        [`curl -o /dev/null -s -w "%{http_code}" -u spadmin:admin -F \'file=@$WORKSPACE/target/identityviewattributes-1.0.$mvnBuildNum.zip\' $addr/rest/plugins` -eq 200 ]
+                        [`curl -o /dev/null -s -w "%{http_code}" -u spadmin:admin -F \'file=@$WORKSPACE/target/identityviewattributes-1.0.$MVN_BUILD_NUM.zip\' $addr/rest/plugins` -eq 200 ]
                     '''
                 }
             }
