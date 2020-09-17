@@ -35,7 +35,7 @@ pipeline {
                     echo "workspace=$WORKSPACE"
                     echo "mvnbuildnum=$MVN_BUILD_NUM"
                     sh '''addr=`aws cloudformation describe-stacks --stack-name jenkins-test-$BUILD_NUMBER --output text --query Stacks[0].Outputs[0].OutputValue`
-                        [ `curl -o /dev/null -s -w "%{http_code}" -u spadmin:admin -F \"file=@$WORKSPACE/target/identityviewattributes-1.0.$MVN_BUILD_NUM.zip\" $addr/rest/plugins` -eq 200 ]
+                        [ `curl -v -s -w \"%{http_code}\" -u spadmin:admin -F \"file=@$WORKSPACE/target/identityviewattributes-1.0.$MVN_BUILD_NUM.zip\" $addr/rest/plugins` -eq 200 ]
                     '''
                 }
             }
